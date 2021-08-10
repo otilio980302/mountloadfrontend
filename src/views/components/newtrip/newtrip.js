@@ -31,8 +31,16 @@ import {
 	CInputGroup,
 } from '@coreui/react';
 
+import axios from 'axios';
+
 import { HiArrowCircleUp } from 'react-icons/hi';
-export default function Products() {
+export default function NewTrip() {
+	const [trips, setTrips] = useState([]);
+
+	axios.get('https://backendtrucks.herokuapp.com/getjourney').then((res) => {
+		const trip = res.data;
+		setTrips(trip);
+	});
 	const [visible, setVisible] = useState(false);
 	const [showFilter, setShowFilter] = useState(true);
 	return (
@@ -79,26 +87,46 @@ export default function Products() {
 						<CTableHeaderCell>
 							<CFormCheck id="flexCheckDefault" label="" />
 						</CTableHeaderCell>
-						<CTableHeaderCell scope="col">ID</CTableHeaderCell>
-						<CTableHeaderCell scope="col">Nombre</CTableHeaderCell>
-						<CTableHeaderCell scope="col">Nombre de Contacto</CTableHeaderCell>
-						<CTableHeaderCell scope="col">Phone</CTableHeaderCell>
-						<CTableHeaderCell scope="col">Cedula</CTableHeaderCell>
-						<CTableHeaderCell scope="col">Added On</CTableHeaderCell>
+						<CTableHeaderCell scope="col">Punto de partida</CTableHeaderCell>
+						<CTableHeaderCell scope="col">Fecha</CTableHeaderCell>
+						<CTableHeaderCell scope="col">Total a pagar</CTableHeaderCell>
+						<CTableHeaderCell scope="col">Tipo de Condicion</CTableHeaderCell>
+						<CTableHeaderCell scope="col">Destinos</CTableHeaderCell>
+						<CTableHeaderCell scope="col">Usuario</CTableHeaderCell>
 					</CTableRow>
 				</CTableHead>
 				<CTableBody>
-					<CTableRow>
-						<CTableHeaderCell>
-							<CFormCheck id="flexCheckDefault" label="" />
-						</CTableHeaderCell>
-						<CTableDataCell scope="row">1</CTableDataCell>
-						<CTableDataCell scope="row">Sally Pachocha</CTableDataCell>
-						<CTableDataCell>Stephania Denesik</CTableDataCell>
-						<CTableDataCell>809-536-9543</CTableDataCell>
-						<CTableDataCell>405-5995618-1</CTableDataCell>
-						<CTableDataCell>2021/07/18</CTableDataCell>
-					</CTableRow>
+					{trips.map((s) => (
+						<CTableRow>
+							<CTableHeaderCell>
+								<CFormCheck id="flexCheckDefault" label="" />
+							</CTableHeaderCell>
+							<CTableDataCell scope="row">{s.start_point}</CTableDataCell>
+							<CTableDataCell scope="row">{s.date}</CTableDataCell>
+							<CTableDataCell>{s.total_payment}</CTableDataCell>
+							<CTableDataCell>Caliente</CTableDataCell>
+							<CTableDataCell>
+								<CDropdown>
+									<CDropdownToggle
+										variant="ghost"
+										visible="true"
+										color="secondary"
+									>
+										<CIcon name="cil-menu" size="lg" />
+									</CDropdownToggle>
+									<CDropdownMenu>
+										{s.destiny.map((s) => (
+											<CDropdownItem>
+												<CIcon name="" size="sm" />
+												{s}
+											</CDropdownItem>
+										))}
+									</CDropdownMenu>
+								</CDropdown>
+							</CTableDataCell>
+							<CTableDataCell>Juan</CTableDataCell>
+						</CTableRow>
+					))}
 				</CTableBody>
 			</CTable>
 			{/* Pagination */}
